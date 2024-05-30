@@ -1,2 +1,2 @@
 # LinReg-core
-Linear Regression scaffolding via gradient descent
+Linear Regression, Logistic Regression, Gradient Descent scaffolding
