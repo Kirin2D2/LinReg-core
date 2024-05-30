@@ -1,0 +1,82 @@
+def loss(delta=0.01):
+    ##
+    ##
+    ##
+    return X, Y, Z
+
+X, Y, Z = loss()
+
+# given X and Y, returns Z
+# X and Y can be arrays or single values...numpy will handle it!
+def loss_z(X, Y):
+    ####### FILL IN CODE ########
+    return Z
+
+# Setting the figure size and 3D projection
+fig = plt.figure(figsize=(12,10))
+ax = fig.add_subplot(projection='3d')
+
+# Creating labels for the axes
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z')
+_ = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm)
+
+
+# implement gradient function 
+def loss_grad(x,y):
+    ## CALCULATE GRADIENT WRT X,Y
+    ##
+    return x_grad, y_grad
+
+#implement gradient descent
+def loss_minimize(x0, y0, eta):
+    # initialize x and y arrays to 0s of length eta + 1
+    x = np.zeros(len(eta) + 1)
+    y = np.zeros(len(eta) + 1)
+
+    # set starting point for gradient descent to (x0, y0)
+    x[0] = x0
+    y[0] = y0
+    print('\n Using starting point: ', x[0], y[0])
+    for i in range(len(eta)):
+        # every 5th iteration print status of gradient descent
+        if i % 5 == 0:
+            print('{0:2d}: x={1:6.3f} y={2:6.3f} z={3:6.3f}'.format(i, x[i], y[i], loss(x[i], y[i])))
+
+        # update next element of x, y
+        x[i+1] = x[i] - eta[i] * loss_grad(x[i], y[i])[0]
+        y[i+1] = y[i] - eta[i] * loss_grad(x[i], y[i])[1]
+
+
+        # if converged, return
+        if (abs(x[i+1] - x[i]) < 1e-6):
+            return x[:i+2], y[:i+2]
+
+        # if diverging, return
+        if abs(x[i+1]) > 100:
+            print('Oh no, diverging?')
+            return x[:i+2], y[:i+2]
+    return x, y
+
+# set the maximum number of iterations and the step size
+max_iter = 30
+eta = 0.1 * np.ones(max_iter)
+
+# visualize trajectory
+def plot_3D(xs, ys, zs):
+    fig = plt.figure(figsize=(12,10))
+    ax = fig.add_subplot(projection='3d')
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
+    elev=ax.elev
+    azim=ax.azim
+    ax.view_init(elev= elev, azim = azim)
+    _ = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm, alpha=0.5)
+    ax.plot(xs, ys, zs, color='orange', markerfacecolor='black', markeredgecolor='k', marker='o', markersize=5)
+
+#run gradient descent
+x_opt, y_opt = loss_minimize(0.05, 0.05, eta)
+z_opt = loss_z(x_opt, y_opt)
+plot_3D(x_opt, y_opt, z_opt)
